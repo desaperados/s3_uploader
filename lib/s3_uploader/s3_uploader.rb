@@ -137,12 +137,14 @@ module S3Uploader
                             total_files, "] Uploading ", key,
                             " to s3://#{bucket}/#{dest}" ].join)
 
-              directory.files.create(
+              file = directory.files.new(
                 :key    => dest,
                 :body   => body,
                 :public => @options[:public],
                 :metadata => @options[:metadata]
               )
+              file.multipart_chunk_size = 5242880
+              file.save
               body.close
             end
           end
